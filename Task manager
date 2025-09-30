@@ -1,0 +1,63 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.ArrayList;
+
+public class ToDoApp {
+    private JFrame frame;
+    private JTextField taskField;
+    private DefaultListModel<String> taskListModel;
+    private JList<String> taskList;
+    private ArrayList<String> tasks;
+
+    public ToDoApp() {
+        tasks = new ArrayList<>();
+
+        frame = new JFrame("To-Do List");
+        frame.setSize(400, 400);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(new BorderLayout());
+
+        JPanel topPanel = new JPanel(new BorderLayout());
+        taskField = new JTextField();
+        JButton addButton = new JButton("Add Task");
+        topPanel.add(taskField, BorderLayout.CENTER);
+        topPanel.add(addButton, BorderLayout.EAST);
+
+        taskListModel = new DefaultListModel<>();
+        taskList = new JList<>(taskListModel);
+        JScrollPane scrollPane = new JScrollPane(taskList);
+
+        JButton deleteButton = new JButton("Delete Task");
+
+        frame.add(topPanel, BorderLayout.NORTH);
+        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(deleteButton, BorderLayout.SOUTH);
+
+        addButton.addActionListener(e -> addTask());
+        deleteButton.addActionListener(e -> deleteTask());
+
+        frame.setVisible(true);
+    }
+
+    private void addTask() {
+        String task = taskField.getText().trim();
+        if (!task.isEmpty()) {
+            tasks.add(task);
+            taskListModel.addElement(task);
+            taskField.setText("");
+        }
+    }
+
+    private void deleteTask() {
+        int index = taskList.getSelectedIndex();
+        if (index != -1) {
+            tasks.remove(index);
+            taskListModel.remove(index);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(ToDoApp::new);
+    }
+}
